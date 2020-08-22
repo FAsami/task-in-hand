@@ -1,62 +1,83 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
 import TodoInput from './Components/TodoInput';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import TodoList from './Components/TodoList';
-import React, { Component } from 'react';
 const { v4: uuidv4 } = require('uuid');
-export default class App extends Component {
-  state = {
-    items: [],
-    id: uuidv4(),
-    item: '',
-    editItem: false,
-  };
-  handleChange = (e) => {
-    this.setState({ item: e.target.value });
-  };
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const newItem = { id: this.state.id, title: this.state.item };
-    const updatedItems = [...this.state.items, newItem];
 
-    this.setState({
-      items: updatedItems,
-      item: '',
-      id: uuidv4(),
-      editItem: false,
-    });
-  };
-  handleDelete = (id) => {
-    this.setState({ items: this.state.items.filter((item) => item.id !== id) });
-  };
-  handleEdit = (id) => {
-    const item = this.state.items.find((item) => item.id === id);
-    this.setState({
-      item: item.title,
-      items: this.state.items.filter((item) => item.id !== id),
-      editItem: true,
-    });
-  };
-  render() {
-    return (
-      <div>
-        <div className="container">
-          <div className="row">
-            <div className="col-10 col-md-8 mt-4 mx-auto">
-              <TodoInput
-                item={this.state.item}
-                editItem={this.state.editItem}
-                handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
-              />
-              <TodoList
-                items={this.state.items}
-                onDelete={this.handleDelete}
-                onEdit={this.handleEdit}
-              />
-            </div>
+export default function App() {
+  const [currentInputValue, setCurrentInputValue] = useState('');
+  const [items, setItems] = useState([]);
+  const [editItem, setEditItem] = useState(false);
+
+  function handleChange(e) {
+    setCurrentInputValue(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setEditItem(false);
+    setItems([...items, { title: currentInputValue, id: uuidv4() }]);
+    setCurrentInputValue('');
+  }
+  function handleDelete(id) {
+    setItems(items.filter((item) => item.id !== id));
+  }
+  function handleEdit(id) {
+    const item = items.find((item) => item.id === id);
+    setItems(items.filter((item) => item.id !== id));
+    setCurrentInputValue(item.title);
+    setEditItem(true);
+  }
+  function handleClearList() {
+    setItems([]);
+  }
+  return (
+    <div>
+      <div className="container">
+        <div className="row">
+          <div className="col-10 col-md-8 mt-4 mx-auto">
+            <TodoInput
+              currentInputValue={currentInputValue}
+              items={items}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+              editItem={editItem}
+            />
+            <TodoList
+              items={items}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              onClear={handleClearList}
+            />
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+// function TodoInput({
+//   item,
+//   handleChange,
+//   handleSubmit,
+//   items,
+//   handleDelete,
+//   handleEdit,
+// }) {
+//   return (
+//     <div>
+//       <form onSubmit={handleSubmit}>
+//         Input : <input type="text" value={item} onChange={handleChange} />
+//         <input type="submit" value="Submit" />
+//       </form>
+//       <p>Current value :{item} </p>
+//       {items.map((item) => (
+//         <p key={item.id}>
+//           Value : {item.title}
+//           <button onClick={() => handleDelete(item.id)}>Del</button>
+//           <button onClick={() => handleEdit(item.id)}>Edit</button>
+//         </p>
+//       ))}
+//     </div>
+//   );
+// }

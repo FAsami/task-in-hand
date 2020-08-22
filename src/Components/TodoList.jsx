@@ -1,7 +1,7 @@
 import React from 'react';
 import TodoItem from './TodoItem';
 
-function TodoList({ items, onDelete, onEdit }) {
+function TodoList({ items, onDelete, onEdit, onClear }) {
   if (items.length === 0)
     return <p className="text-center py-3">Nothing to do</p>;
   return (
@@ -17,6 +17,9 @@ function TodoList({ items, onDelete, onEdit }) {
           onEdit={onEdit}
         />
       ))}
+      <button className="btn btn-block btn-danger" onClick={onClear}>
+        Clear
+      </button>
     </div>
   );
 }

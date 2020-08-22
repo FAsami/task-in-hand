@@ -1,7 +1,13 @@
 import React from 'react';
 import { RiMenuAddLine } from 'react-icons/ri';
 import { FcTodoList } from 'react-icons/fc';
-function TodoInput({ item, editItem, handleChange, handleSubmit }) {
+
+function TodoInput({
+  currentInputValue,
+  editItem,
+  handleChange,
+  handleSubmit,
+}) {
   return (
     <div className="card card-body">
       <h3 className="card-title d-flex align-items-center justify-content-center">
@@ -23,7 +29,7 @@ function TodoInput({ item, editItem, handleChange, handleSubmit }) {
             className="form-control"
             id="addItem"
             placeholder="Add task"
-            value={item}
+            value={currentInputValue}
             onChange={handleChange}
           />
         </div>
@@ -34,7 +40,7 @@ function TodoInput({ item, editItem, handleChange, handleSubmit }) {
               ? 'btn btn-info btn-sm btn-block my-2'
               : 'btn btn-success btn-sm btn-block my-2'
           }
-          disabled={item.length <= 0 ? true : false}
+          disabled={currentInputValue.length <= 0 ? true : false}
         >
           {editItem ? 'Edit' : 'Add'}
         </button>
